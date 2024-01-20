@@ -11,6 +11,8 @@ let userGithub = document.getElementById("user-github");
 let userTwitter = document.getElementById("user-twitter");
 const olderButton = document.getElementById('older-button');
 const newerButton = document.getElementById('newer-button');
+const paginationButtons = document.getElementById('pagination-buttons');
+let repoListLength = 0;
 
   function showLoader() {
     document.getElementById('loader').style.display = 'block';
@@ -24,12 +26,6 @@ const newerButton = document.getElementById('newer-button');
     fetch(`https://api.github.com/users/${githubIdName}`)
       .then(response => response.json())
       .then(user => {
-        // var elements = document.querySelectorAll('.toggle-up');
-
-        // elements.forEach(function(element) {
-        //   element.classList.remove('toggle-up');
-        //   element.classList.add('toggle-down');
-        // });
         avatarImage.src = `${user.avatar_url}`;
         userName.innerText = `${user.name}`;
         userBio.innerText = `${user.bio}`;
@@ -60,25 +56,38 @@ const newerButton = document.getElementById('newer-button');
       });
   }
 
-  function displayRepos(page) {
+  function filterRepositories() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const filteredRepos = repositories.filter(repo => repo.name.toLowerCase().includes(searchTerm));
+    currentPage = 1;
+    displayRepos(currentPage, filteredRepos);
+    displayPagination();
+  }
+
+   function displayRepos(page, reposToDisplay) {
     const startIndex = (page - 1) * reposPerPage;
     const endIndex = startIndex + reposPerPage;
-    const reposToDisplay = repositories.slice(startIndex, endIndex);
+    const repos = reposToDisplay || repositories;
+    const reposToDisplayOnPage = repos.slice(startIndex, endIndex);
 
     let repoList = '';
-    reposToDisplay.forEach(repo => {
+    let norepo = '<h2>No repositories found</h2>';
+    let repoData='';
+    reposToDisplayOnPage.forEach(repo => {
       repoList += `
         <div class="mb-3 d-flex flex-column border border-dark repo-div p-3">
           <h3 class="repo-name" title="${repo.name}">${repo.name}</h3>
-          <p>${repo.description?repo.description:""}</p>
+          <p>${repo.description || ""}</p>
           <div class="d-flex flex-wrap gap-2">
             ${repo.topics.map(topic => `<h4><span class="badge text-bg-primary p-2 pt-1">${topic}</span></h4>`).join('')}
           </div>
         </div>
       `;
     });
+    repoListLength = repoList.length;
+    repoData = repoList.length == 0? norepo:repoList;
 
-    document.getElementById('repo-list').innerHTML = repoList;
+    document.getElementById('repo-list').innerHTML = repoData;
   }
 
   function displayPagination() {
@@ -114,6 +123,9 @@ const newerButton = document.getElementById('newer-button');
     pagination.innerHTML = paginationHtml;
     olderButton.disabled = (currentPage === 1);
     newerButton.disabled = (currentPage === totalPages);
+    pagination.style.display = repoListLength == 0? 'none':'block';
+    olderButton.style.display = repoListLength == 0? 'none':'flex';
+    newerButton.style.display = repoListLength == 0? 'none':'flex';
   }
 
   function changePage(page) {
