@@ -38,6 +38,10 @@ cd Fyle-Challenge
 - Adjust the `reposPerPage` variable to control the number of repositories displayed per page.
 - Change the `githubIdName` variable with the desired GitHub username.
 
+## Project Image
+
+![Demo Image](demo.png)
+
 ## Important Notes
 
 - GitHub API requests are subject to rate limits. Be mindful of these limits to avoid disruptions.
