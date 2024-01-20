@@ -1,0 +1,52 @@
+#loader {
+    display: none;
+  }
+
+.avatar{
+    width:200px;
+    height:200px;
+    border-radius: 50%;
+}
+
+#avatar-image{
+    width:100%;
+    border-radius: 50%;
+}
+
+.repo-div{
+    width:330px;
+}
+
+#user-details{
+    gap:4rem;
+}
+
+.repo-name {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+a{
+    text-decoration: none;
+}
+
+.toggle-up {
+    visibility: hidden !important;
+  }
+
+.toggle-down {
+    visibility: visible !important;
+  }
+
+@media only screen and (max-width: 576px) {
+    #user-details{
+        gap:1.9rem;
+    }
+    .repo-div{
+        width:303px;
+    }
+  }
+ 
+  
